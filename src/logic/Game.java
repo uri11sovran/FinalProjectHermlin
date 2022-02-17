@@ -30,7 +30,7 @@ public class Game {
 		tern_counter = 1;
 	}
 	
-	public void MakeTern(Graphics gr, int x, int y) 
+	public void MakeTern(Graphics gr, int x, int y) throws CloneNotSupportedException 
 	{
 		int win_flag = 0;
 		x = PiecePlacementHandler.GetReletivePosition(x);
@@ -49,13 +49,13 @@ public class Game {
 			{
 				win_flag = blackPlayer.addPosition(Math.round((float)(y) / 24) - 1,
 												   Math.round((float)(x) / 24) - 1,
-												   gameBoard);
+												   gameBoard.clone());
 			}
 			else
 			{
 				win_flag = whitePlayer.addPosition(Math.round((float)(y) / 24) - 1,
 												   Math.round((float)(x) / 24) - 1,
-												   gameBoard);
+												   gameBoard.clone());
 			}
 			
 			if(win_flag == 2)

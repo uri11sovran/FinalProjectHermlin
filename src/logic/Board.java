@@ -2,7 +2,7 @@ package logic;
 
 import java.util.HashMap;
 
-public class Board {
+public class Board implements Cloneable {
 	public static final int BOARD_ROW_SIZE = 19;
 	
 	private HashMap<Integer, PlayerType> pieces;
@@ -11,6 +11,21 @@ public class Board {
 	{		
 		pieces = new HashMap<Integer, PlayerType>();
 	}
+	
+	@Override
+	public Board clone() throws CloneNotSupportedException
+    {
+        // Assign the shallow copy to
+        // new reference variable t
+		Board board = (Board)super.clone();
+ 
+		board.pieces = pieces;
+ 
+        // Create a new object for the field c
+        // and assign it to shallow copy obtained,
+        // to make it a deep copy
+        return board;
+    }
 	
 	public int getNumberOfPieces()
 	{

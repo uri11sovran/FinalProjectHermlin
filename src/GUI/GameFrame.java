@@ -86,8 +86,11 @@ public class GameFrame extends JFrame implements MouseListener {
 		int x=e.getX();
 	    int y=e.getY();
 
-	    // sends the user action data to the game controller
-	    gameController.MakeTern(getGraphics(), x, y);
+	    try {
+			gameController.MakeTern(getGraphics(), x, y);
+		} catch (CloneNotSupportedException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	@Override
