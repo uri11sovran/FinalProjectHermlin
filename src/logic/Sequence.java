@@ -3,6 +3,8 @@ package logic;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import Helper.Constants;
+
 public class Sequence {
 	private ArrayList<Integer> sequence;
 	private SequenceType seq_type;
@@ -31,13 +33,10 @@ public class Sequence {
 	
 	public boolean addToSequence(int pos)
 	{
-		//if(!isInSameSequence(pos))
-			//return false;
-		
 		sequence.add(pos);
 		Collections.sort(sequence);
 		
-		if(sequence.size() == 6)
+		if(sequence.size() == Constants.SIX_IN_A_ROW)
 			seq_type = SequenceType.SIX_IN_A_ROW;
 		else
 		{
@@ -46,22 +45,9 @@ public class Sequence {
 				seq_type = SequenceType.getSequenceType(Math.abs(sequence.get(0) - sequence.get(1)));
 			}
 			else
-			{
 				seq_type = SequenceType.values()[seq_type.getPosition() + 1];
-				//System.out.println(Math.abs(sequence.get(0) - sequence.get(1)) + " " + seq_type.getPosition());
-			}
 		}
 		
 		return true;
 	}
-	
-	/*public boolean isInSameSequence(int pos)
-	{
-		if(seq_type == SequenceType.SINGLE && 
-				SequenceType.getSequenceType(Math.abs(sequence.get(0) - pos)) != null)
-			return true;
-
-		return sequence.get(0) - pos == seq_type.getJumps() ||
-				pos - sequence.get(sequence.size() - 1) == seq_type.getJumps();
-	}*/
 }

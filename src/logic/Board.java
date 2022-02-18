@@ -2,6 +2,8 @@ package logic;
 
 import java.util.HashMap;
 
+import Helper.Constants;
+
 public class Board implements Cloneable {
 	public static final int BOARD_ROW_SIZE = 19;
 	
@@ -41,9 +43,9 @@ public class Board implements Cloneable {
 		if(col >= 323)
 			col += 6;
 		
-		index_in_map = (Math.round((float)(row) / 24) - 1) * BOARD_ROW_SIZE 
-				+ Math.round((float)(col) / 24) - 1;
-				
+		index_in_map = (Math.round((float)(row) / Game.CELL_SIZE) - 1) * BOARD_ROW_SIZE 
+				+ Math.round((float)(col) / Game.CELL_SIZE) - 1;
+						
 		if(pieces.containsKey(index_in_map))
 		{
 			return false;
@@ -56,27 +58,29 @@ public class Board implements Cloneable {
 	public Sequence getSequecnce(int row, int col, int jumps)
 	{
 		int pos = PiecePlacementHandler.calculatePosition(row, col);
+		int leftSeq, rightSeq;
+		boolean leftSeqEnd = false, rightSeqEnd = false;
 		Sequence seq = new Sequence(pos);
 		
-		while(seq.getSeqSize() < 6)
+		leftSeq = rightSeq = pos;
+		while((!leftSeqEnd || !rightSeqEnd) && seq.getSeqSize() < Constants.SIX_IN_A_ROW)
 		{
-			pos += jumps;
-			if(isInSequence(PiecePlacementHandler.calculatePosition(row, col), pos, jumps))
+			leftSeq -= jumps;
+			rightSeq += jumps;
+			
+			if(!leftSeqEnd && isInSequence(pos, leftSeq, jumps))
 			{
-				seq.addToSequence(pos);
+				seq.addToSequence(leftSeq);
 			}
 			else
-				break;
-		}
-		
-		pos = PiecePlacementHandler.calculatePosition(row, col);
-		while(seq.getSeqSize() < 6)
-		{
-			pos -= jumps;
-			if(isInSequence(PiecePlacementHandler.calculatePosition(row, col), pos, jumps))
-				seq.addToSequence(pos);
+				leftSeqEnd = true;
+			
+			if(!rightSeqEnd && isInSequence(pos, rightSeq, jumps))
+			{
+				seq.addToSequence(rightSeq);
+			}
 			else
-				break;
+				rightSeqEnd = true;
 		}
 		
 		if(seq.getSeqSize() == 0)

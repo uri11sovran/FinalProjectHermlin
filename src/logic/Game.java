@@ -10,6 +10,9 @@ import GUI.GameFrame;
 import GUI.ImageHandler;
 
 public class Game {
+	public static final int NUM_OF_CELLS = 19;
+	public static int CELL_SIZE;
+	
 	private JFrame frame;
 	private PlayerType player_turn = PlayerType.BLACK;
 	
@@ -28,6 +31,9 @@ public class Game {
 		whitePlayer = new Player();
 		
 		tern_counter = 1;
+		
+		// Initialize static variable
+		CELL_SIZE = frame.getWidth() / NUM_OF_CELLS;
 	}
 	
 	public void MakeTern(Graphics gr, int x, int y) throws CloneNotSupportedException 
@@ -35,6 +41,7 @@ public class Game {
 		int win_flag = 0;
 		x = PiecePlacementHandler.GetReletivePosition(x);
 		y = PiecePlacementHandler.GetReletivePosition(y);
+		System.out.println(frame.getWidth());
 		
 		if(gameBoard.PlacePiece(x, y, player_turn))
 		{
@@ -47,14 +54,14 @@ public class Game {
 			
 			if(player_turn == PlayerType.BLACK)
 			{
-				win_flag = blackPlayer.addPosition(Math.round((float)(y) / 24) - 1,
-												   Math.round((float)(x) / 24) - 1,
+				win_flag = blackPlayer.addPosition(Math.round((float)(y) / CELL_SIZE) - 1,
+												   Math.round((float)(x) / CELL_SIZE) - 1,
 												   gameBoard.clone());
 			}
 			else
 			{
-				win_flag = whitePlayer.addPosition(Math.round((float)(y) / 24) - 1,
-												   Math.round((float)(x) / 24) - 1,
+				win_flag = whitePlayer.addPosition(Math.round((float)(y) / CELL_SIZE) - 1,
+												   Math.round((float)(x) / CELL_SIZE) - 1,
 												   gameBoard.clone());
 			}
 			
