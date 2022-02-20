@@ -26,7 +26,7 @@ public class Player {
 				System.out.println(seqToAdd.getSeqType());
 				win_flag = addSequenceToList(seqToAdd);
 				if(win_flag == Constants.PLAYER_WON)
-					return win_flag;
+					break;
 			}
 		}
 		
