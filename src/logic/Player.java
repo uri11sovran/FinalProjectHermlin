@@ -1,6 +1,7 @@
 package logic;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import Helper.Constants;
@@ -15,7 +16,6 @@ public class Player {
 	
 	public int addPosition(int row, int col, Board gameBoard)
 	{
-		int win_flag = 0;
 		Sequence seqToAdd;
 		
 		for(SequenceTypeCategory Category : SequenceTypeCategory.values())
@@ -23,27 +23,59 @@ public class Player {
 			if(Category != SequenceTypeCategory.SINGLE)
 			{
 				seqToAdd = gameBoard.getSequecnce(row, col, Category.getJumps());
-				System.out.println(seqToAdd.getSeqType());
-				win_flag = addSequenceToList(seqToAdd);
-				if(win_flag == Constants.PLAYER_WON)
-					break;
+				//System.out.println(seqToAdd.getSeqType());
+				if(seqToAdd.getSeqType() == SequenceType.SIX_IN_A_ROW)
+					return Constants.PLAYER_WON;
+				
+				if(seqToAdd.getSeqType() != SequenceType.SINGLE)
+				{
+					deleteCoresspondingSequences(seqToAdd);
+					addSequenceToList(seqToAdd);
+				}
 			}
 		}
+		//printSeqs();
 		
-		return win_flag;
+		return 0;
+	}
+	
+	public void printSeqs()
+	{
+		for(SequenceType key : sequences.keySet())
+		{
+			for(Sequence seq : sequences.get(key))
+			{
+				 System.out.println(seq.getSeqSize() + " " + seq.getSeqType());
+			}
+		}
 	}
 		
-	public int addSequenceToList(Sequence seq_to_add)
-	{
-		if(seq_to_add.getSeqType() == SequenceType.SIX_IN_A_ROW)
-			return Constants.PLAYER_WON;
-		
+	public void addSequenceToList(Sequence seq_to_add)
+	{		
 		if(!sequences.containsKey(seq_to_add.getSeqType()))
 		{
 			sequences.put(seq_to_add.getSeqType(), new LinkedList<Sequence>());
 		}
 		
 		sequences.get(seq_to_add.getSeqType()).add(seq_to_add);
-		return 1;
+	}
+	
+	public void deleteCoresspondingSequences(Sequence addedSeq)
+	{
+		Iterator<Sequence> it;
+		Sequence currSeq;
+		
+		for(SequenceType key : sequences.keySet())
+		{
+			it = sequences.get(key).iterator();
+			while(it.hasNext())
+			{
+				currSeq = it.next();
+				if(currSeq.isSubSequence(addedSeq))
+				{
+					it.remove();
+				}
+			}
+		}
 	}
 }

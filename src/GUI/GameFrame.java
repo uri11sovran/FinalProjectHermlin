@@ -11,7 +11,9 @@ import java.awt.event.MouseListener;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
+import Helper.Constants;
 import logic.Game;
 import logic.PlayerType;
 
@@ -23,8 +25,6 @@ import logic.PlayerType;
 @SuppressWarnings("serial")
 public class GameFrame extends JFrame implements MouseListener {
 	Game gameController; // an instance of the Game class that controls the logic of the game itself
-	JLabel label; // a label that holds an image of the game board and allows the user to interact with the board
-    MediaTracker tracker; // used to track the loading of piece images
 	
 	public GameFrame() {
 		// set initial frame
@@ -39,9 +39,9 @@ public class GameFrame extends JFrame implements MouseListener {
 		this.setIconImage(image.getImage());
 		
 		// set board image as label
-		ImageIcon icon = new ImageIcon("src/images/Board.png"); 
-		label = new JLabel();
+		JLabel label = new JLabel();
 		label.addMouseListener(this);
+		ImageIcon icon = new ImageIcon("src/images/Board.png"); 
 		label.setIcon(icon);
 		
 		// add the board image to the frame
@@ -60,6 +60,7 @@ public class GameFrame extends JFrame implements MouseListener {
 	 */
 	public void waitForImage()
 	{
+		MediaTracker tracker;
 		// gets the black image path
 		Image black_img = Toolkit.getDefaultToolkit().getImage(
 											ImageHandler.getPieceImage(PlayerType.BLACK));
@@ -85,12 +86,16 @@ public class GameFrame extends JFrame implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		int x=e.getX();
 	    int y=e.getY();
+	    int GameStatus = 0;
 
 	    try {
-			gameController.MakeTern(getGraphics(), x, y);
+			GameStatus = gameController.MakeTern(getGraphics(), x, y);
 		} catch (CloneNotSupportedException e1) {
 			e1.printStackTrace();
 		}
+	    
+	    if(GameStatus == Constants.PLAYER_WON)
+	    	gameOver();
 	}
 
 	@Override
@@ -117,5 +122,24 @@ public class GameFrame extends JFrame implements MouseListener {
 		Cursor cursor = new Cursor(Cursor.DEFAULT_CURSOR);
         this.setCursor(cursor);
         this.setVisible(true);
+	}
+	
+	public void gameOver() 
+	{
+	   String message = "Game, Want to try Again?";
+	   String title = "Game Over";
+	   int reply = JOptionPane.showConfirmDialog(this, message, title, JOptionPane.YES_NO_OPTION);
+	   
+	   if (reply == JOptionPane.YES_OPTION)
+	   {
+	       this.dispose();
+	       this.setVisible(true);
+	       gameController.resetGame();
+	   }
+	   else
+	   {
+	      this.dispose();
+	      new MainFrame();
+	   }
 	}
 }

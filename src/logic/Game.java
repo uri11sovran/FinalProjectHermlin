@@ -1,10 +1,8 @@
 package logic;
 
 import java.awt.Graphics;
-import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
 import GUI.GameFrame;
 import GUI.ImageHandler;
@@ -12,6 +10,10 @@ import GUI.ImageHandler;
 public class Game {
 	public static final int NUM_OF_CELLS = 19;
 	public static int CELL_SIZE;
+	
+	// used to determine the type of the game
+	public static final int PVP = 1;
+	public static final int vPC = 2;
 	
 	private JFrame frame;
 	private PlayerType player_turn = PlayerType.BLACK;
@@ -36,12 +38,11 @@ public class Game {
 		CELL_SIZE = frame.getWidth() / NUM_OF_CELLS;
 	}
 	
-	public void MakeTern(Graphics gr, int x, int y) throws CloneNotSupportedException 
+	public int MakeTern(Graphics gr, int x, int y) throws CloneNotSupportedException 
 	{
 		int win_flag = 0;
 		x = PiecePlacementHandler.GetReletivePosition(x);
 		y = PiecePlacementHandler.GetReletivePosition(y);
-		System.out.println(frame.getWidth());
 		
 		if(gameBoard.PlacePiece(x, y, player_turn))
 		{
@@ -64,21 +65,16 @@ public class Game {
 												   Math.round((float)(x) / CELL_SIZE) - 1,
 												   gameBoard.clone());
 			}
-			
-			if(win_flag == 2)
-			{
-				JOptionPane.showMessageDialog(frame, player_turn + " Player won!");
-				frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-			}
 				
 			HandlePlayerTurn();
 			tern_counter++;
 		}
+		
+		return win_flag;
 	}
 	
 	public void HandlePlayerTurn()
 	{
-		System.out.println(gameBoard.getNumberOfPieces());
 		if(gameBoard.getNumberOfPieces() == 1 || player_turn == PlayerType.BLACK && tern_counter > 2)
 		{
 			player_turn = PlayerType.WHITE;
@@ -89,5 +85,15 @@ public class Game {
 			player_turn = PlayerType.BLACK;
 			tern_counter = 1;
 		}
+	}
+	
+	public void resetGame()
+	{
+		gameBoard = new Board();
+		
+		blackPlayer = new Player();
+		whitePlayer = new Player();
+		
+		tern_counter = 1;
 	}
 }

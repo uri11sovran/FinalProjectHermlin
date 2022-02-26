@@ -1,11 +1,10 @@
 package logic;
 
-import GUI.GameFrame;
+import GUI.MainFrame;
 
 public class Connect6_Program {
 
 	public static void main(String[] args) {		
-		GameFrame game = new GameFrame();
+		new MainFrame();
 	}
-
 }
